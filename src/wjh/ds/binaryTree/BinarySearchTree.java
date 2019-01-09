@@ -1,228 +1,285 @@
 package wjh.ds.binaryTree;
 
-import java.util.Stack;
-/**
- * 二叉查找树
- * @author WJH
- * @version 1.0
- */
-public class BinarySearchTree {
-	//root节点
-	private BinaryNode root;
+import java.util.LinkedList;
+
+public class BinarySearchTree<E extends Comparable<? super E>> {
+
+	private class Node{
+		E value;
+		Node left;
+		Node right;
+		
+		public Node(E val) {
+			value = val;
+			left = null;
+			right = null;
+		}
+	}
 	
-	class BinaryNode {
-		int element;
-		BinaryNode left;
-		BinaryNode right;
-		//Constructors
-		BinaryNode(int theElement){
-			this(theElement,null,null);
-		}
-		BinaryNode(int theElement,BinaryNode lt,BinaryNode rt){
-			element=theElement;
-			left=lt;
-			right=rt;
-		}
+	private Node root;
+	private int size ;
+	public BinarySearchTree() {
+		root = null;
+		size = 0;
 	}
 	/**
-	 * 向树中插入值
-	 * @param x 待插入树中的值
+	 * get tree numbers
+	 * @return
 	 */
-	public void insert(int x){
-		root=insert(x,root);
+	public int size() {
+		return size;
 	}
+	
 	/**
-	 * 判断树中是否存在数据x
-	 * @param x 待判断的数据
-	 * @return 如果树中存在x，返回true，否则返回false
+	 * add value to BinarySearchTree
+	 * @param val value
 	 */
-	public boolean contains(int x){
-		return contains(x,root);
-	}
-	/**
-	 * 找出树中最小值
-	 * @return 最小值
-	 * @throws Exception 空树异常
-	 */
-	public int findMin() throws Exception{
-		if(isEmpty())
-			throw new Exception("Not exist number.");
-		return findMin(root).element;
-	}
-	private BinaryNode findMin(BinaryNode bn){
-		if(bn==null)
-			return null;
-		else if(bn.left==null)
-			return bn;
-		return findMin(bn.left);
-	}
-	private boolean contains(int x,BinaryNode bn){
-		if(bn==null)
-			return false;
-		if(x<bn.element)
-			return contains(x,bn.left);
-		else if(x>bn.element)
-			return contains(x,bn.right);
-		else
-			return true;
-	}
-	private BinaryNode insert(int x,BinaryNode t){
-		if(t==null)
-			return new BinaryNode(x, null, null);
-		if(x>t.element)
-			t.right=insert(x,t.right);
-		else if(x<t.element)
-			t.left=insert(x,t.left);
-		else
-			;
-		return t;
-	}
-	/**
-	 * 先序遍历（递归思想）
-	 */
-	public void rootFirst(){
-		if(root==null)
-			System.out.println("Empty tree");
-		else
-			rootFirst(root);
-		System.out.println();
-	}
-	private void rootFirst(BinaryNode bn){
-		System.out.print(bn.element+" ");
-		if(bn.left!=null)
-			rootFirst(bn.left);
-		if(bn.right!=null)
-			rootFirst(bn.right);
-	}
-	/**
-	 * 判断树是否为空
-	 */
-	public boolean isEmpty(){
-		return root==null;
-	}
-	/**
-	 * 清空树
-	 */
-	public void makeEmpty(){
-		root=null;
-	}
-	/**
-	 * 非递归方式先序遍历二叉树
-	 */
-	public void preOrderUnRecur(){
-		System.out.println("pre-order");
-		if(root!=null){
-			if(root!=null){
-				Stack<BinaryNode> stack=new Stack<>();
-				stack.add(root);
-				while(!stack.isEmpty()){
-					root=stack.pop();
-					System.out.print(root.element+" ");
-					if(root.right!=null)
-						stack.push(root.right);
-					if(root.left!=null)
-						stack.push(root.left);
-				}
-			}
-		}
-		System.out.println();
-	}
-	/**
-	 * 非递归方式中序遍历二叉树
-	 */
-	public void inOrderUnRecur(){
-		System.out.println("in-order:");
-		if(root!=null){
-			Stack<BinaryNode> stack=new Stack<>();
-			while(!stack.isEmpty() || root!=null){
-				if(root!=null){
-					stack.push(root);
-					root=root.left;
-				}else{
-					root=stack.pop();
-					System.out.print(root.element+" ");
-					root=root.right;
-				}
-			}
-		}
-	}
-	/**
-	 * 移除数据
-	 * @param x
-	 */
-	public void remove(int x){
-		root=remove(x,root);
-	}
-	private BinaryNode remove(int x,BinaryNode t){
-		if(t==null)
-			return t;
-		if(x<t.element)
-			t.left=remove(x, t.left);
-		else if(x>t.element)
-			t.right=remove(x, t.right);
-		else if(t.left!= null && t.right!=null){
-			t.element=findMin(t.right).element;
-			t.right=remove(t.element, t.right);
-		}else
-			t=(t.left!=null)? t.left : t.right;
-		return t;
+	public void add(E val) {
+		root = add(root,val);
 	}
 
-	/**
-	 * 中序遍历
-	 */
-	public void rootSecont(){
-		rootSecont(root);
-		System.out.println();
-	}
-	private void rootSecont(BinaryNode bn){
-		if(bn==null)
-			return ;
-		rootSecont(bn.left);
-		System.out.print(bn.element+" ");
-		rootSecont(bn.right);
-	}
-	/**
-	 * 后序遍历
-	 */
-	public void rootLast(){
-		if(root==null)
-			System.out.println("Empty tree");
-		else
-			rootLast(root);
-		System.out.println();
-	}
-	private void rootLast(BinaryNode bn){
-		if(bn.left!=null)
-			rootLast(bn.left);
-		if(bn.right!=null)    
-			rootLast(bn.right);
-		System.out.print(bn.element+" ");
-	}
-	
-	/**
-	 * 节点N的高是从节点N到一片树叶的最长路径的长,节点N的深度(depth)为从根到N的唯一路劲的长
-	 * @return 二叉树的高
-	 */
-	public int getHeight(){
-		//跟的深度为0
-		return getHeight(root)-1;
-	}
-	private int getHeight(BinaryNode bn){
-		if(bn==null)
-			return 0;
-		else{
-			int left=getHeight(bn.left);
-			int right=getHeight(bn.right);
-			return Math.max(left, right)+1;
+	private Node add(Node root, E val) {
+		if (root == null) {
+			size++;
+			return new Node(val);
 		}
-	}
-	/**
-	 * 
-	 * @return 返回跟结点
-	 */
-	public BinaryNode getRoot(){
+		int result = val.compareTo(root.value);
+		if (result < 0) {
+			root.left = add(root.left, val);
+		}else if (result > 0) {
+			root.right = add(root.right, val);
+		}else {
+			return root;
+		}
+		
 		return root;
 	}
 	
+	public boolean contains(E val) {
+		return contains(root,val);
+	}
+
+	private boolean contains(Node root, E val) {
+		if (root == null) {
+			return false;
+		}
+		if (val.compareTo(root.value) > 0) {
+			return contains(root.right, val);
+		}else if (val.compareTo(root.value) < 0) {
+			return contains(root.left, val);
+		}else {
+			return true;
+		}
+	}
+	
+	public boolean isEmpty() {
+		return root == null;
+	}
+	
+	public void makeEmpty() {
+		root = null;
+		size=0;
+	}
+	/**
+	 * Search min value
+	 * @return min value
+	 */
+	public E findMin() {
+		return findMin(root)== null ? null : findMin(root).value;
+	}
+	private Node findMin(Node root) {
+		if (root == null) {
+			return null;
+		}else if (root.left == null) {
+			return root;
+		}
+		return findMin(root.left);
+	}
+	/**
+	 * Search max value
+	 * @return max value
+	 */
+	public E findMax() {
+		return findMax(root);
+	}
+	private E findMax(Node root) {
+		if (root == null) {
+			return null;
+		}else if(root.right == null){
+			return root.value;
+		}
+		return findMax(root.right);
+	}
+	
+	/**
+	 * first print
+	 */
+	public void firstPrint() {
+		first(root);
+	}
+	private void first(Node root) {
+		if (root == null) {
+			return;
+		}
+		System.out.println(root.value);
+		first(root.left);
+		first(root.right);
+	}
+	/**
+	 * second print (can use order)
+	 */
+	public void secondPrint() {
+		second(root);
+	}
+	private void second(Node root) {
+		if (root == null) {
+			return;
+		}
+		second(root.left);
+		System.out.println(root.value);
+		second(root.right);
+	}
+	
+	public void lastPrint() {
+		lastPrint(root);
+	}
+	private void lastPrint(Node root) {
+		if (root == null) {
+			return;
+		}
+		lastPrint(root.left);
+		lastPrint(root.right);
+		System.out.println(root.value);
+	}
+	/**
+	 * 层序遍历
+	 */
+	public void levelPrint() {
+		levelPrint(root);
+	}
+	private void levelPrint(Node root) {
+		if (root == null) {
+			return;
+		}
+		LinkedList<Node> list = new LinkedList<>();
+		list.add(root);
+		while (!list.isEmpty()) {
+			Node ret = list.poll();
+			if (ret == null) {
+				continue;
+			}
+			System.out.println(ret.value);
+			list.add(ret.left);
+			list.add(ret.right);
+		}
+	}
+	
+	public E removeMin() {
+		E result = findMin();
+		root = removeMin(root, result);
+		return result;
+	}
+	private Node removeMin(Node root, E val) {
+		if (root.left == null) {
+			Node rightNode = root.right;
+			root.right = null;
+			size--;
+			return rightNode;
+		}
+		root.left = removeMin(root.left, val);
+		return root;
+	}
+	
+	public E removeMax() {
+		E result = findMax();
+		root = removeMax(root, result);
+		return result;
+	}
+	private Node removeMax(Node root, E val) {
+		if (root.right == null) {
+			Node leftNode = root.left;
+			root.left = null;
+			size--;
+			return leftNode;
+		}
+		root.right = removeMin(root.right, val);
+		return root;
+	}
+	
+	/**
+	 * remove from binary search tree
+	 * @param val the item to remove
+	 */
+	public void remove(E val) {
+		root = remove(root,val);
+	}
+	/**
+	 * remove from binary search tree
+	 * @param val the item to remove 
+	 */
+	public void remove2(E val) {
+		root = remove2(root,val);
+	}
+	private Node remove(Node root, E val) {
+		if (root == null) {
+			return root;
+		}
+		
+		int reuslt = val.compareTo(root.value);
+		if (reuslt>0) {
+			root.right = remove(root.right, val);
+		} else if (reuslt <0) {
+			root.left = remove(root.left, val);
+		} else if (root.left != null && root.right != null) {
+			Node minNode = findMin(root.right);
+			minNode.right = removeMin(root.right, minNode.value);
+			minNode.left = root.left;
+			root.left = root.right = null;
+			return minNode;
+		} else {
+			if (root.left == null) {
+				Node rightNode = root.right;
+				root.right = null;
+				size--;
+				return rightNode;
+			}
+			if (root.right == null) {
+				Node leftNode = root.left;
+				root.left = null;
+				size--;
+				return leftNode;
+			}
+		}
+		return root;
+	}
+	
+	private Node remove2(Node root, E val) {
+		if (root == null) {
+			return root;
+		}
+		
+		int reuslt = val.compareTo(root.value);
+		if (reuslt>0) {
+			root.right = remove2(root.right, val);
+		} else if (reuslt <0) {
+			root.left = remove2(root.left, val);
+		} else if (root.left != null && root.right != null) {
+			root.value = findMin(root.right).value;
+			root.right = remove2(root.right, root.value);
+		} else {
+			root = (root.left != null) ?
+					root.left : root.right;
+			size--;
+		}
+		return root;
+	}
+	
+	/**
+	 * binary search tree rank<br />
+	 * 查询 val 在二叉树中的排 名
+	 * @return
+	 */
+	public int rank(E val) {
+		return 0;
+	}
 }
