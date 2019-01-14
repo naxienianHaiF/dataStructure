@@ -9,7 +9,6 @@ import java.util.LinkedList;
  */
 public class AVLTree<E extends Comparable<? super E>> {
 
-	@SuppressWarnings("hiding")
 	class Node<E> {
 		E val;
 		Node<E> left;
@@ -78,15 +77,15 @@ public class AVLTree<E extends Comparable<? super E>> {
 			root.left = add(root.left, val);
 			if (height(root.left) - height(root.right) == 2) {
 				if (val.compareTo(root.left.val) < 0) {
-					root = rotateWithLeftChild(root);
+					root = rotateWithRightChild(root);
 				} else {
-					root = doubleWithRightChild(root);
+					root = doubleWithLeftChild(root);
 				}
 			}
 		} else if (compareResult >0) {
 			root.right = add(root.right, val);
 			if (height(root.right) - height(root.left) == 2) {
-				if (val.compareTo(root.right.val) < 0) {
+				if (val.compareTo(root.right.val) > 0) {
 					root = rotateWithLeftChild(root);
 				} else {
 					root = doubleWithRightChild(root);
@@ -118,23 +117,68 @@ public class AVLTree<E extends Comparable<? super E>> {
 	}
 	
 	/**
-	 * rotate binary tree node with left child.
-	 * <br />For AVL tree, this is a single rotation for case one.
-	 * Update heights, then return new root.
+	 * 	对节点y进行右旋转 <br />
+	 * 			y                       x     
+	 * 		   / \                    /   \   
+	 * 		  x  T4            右旋转                                 z    y     
+	 *       / \      ------>       /  \  /  \    
+	 *      z  T3                  T1  T2 T3 T4
+ 	 *     / \                                         
+	 *    T1 T2
 	 */
-	private Node<E> rotateWithLeftChild(Node<E> node) {
+	private Node<E> rotateWithRightChild(Node<E> node) {
 		Node<E> temp = node.left;
 		node.left = temp.right;
 		temp.right = node;
+		
 		node.height = Math.max(height(node.left), height(node.right))+1;
 		temp.height = Math.max(height(temp.left), node.height)+1;
 		
 		return temp;
 	}
 	
+	/**
+	 *          y                           x
+	 *         / \                         / \
+	 *        T1  x       左旋转                                     y  z
+	 *           / \    -------->        / \  \
+	 *          T2  z                   T1 T2 T3
+	 *               \
+	 *               T3
+	 *           
+	 * rotate binary tree node with left child.
+	 * <br />For AVL tree, this is a single rotation for case one.
+	 * Update heights, then return new root.
+	 */
+	private Node<E> rotateWithLeftChild(Node<E> node) {
+		Node<E> temp = node.right;
+		node.right = temp.left;
+		temp.left = node;
+		
+		node.height = Math.max(height(node.left), height(node.right))+1;
+		temp.height = Math.max(height(temp.left), node.height)+1;
+		
+		return temp;
+	}
+	
+	/**
+	 * 	双旋转RL(先进行右旋转，再进行左旋转)。
+	 * @param node
+	 * @return
+	 */
 	private Node<E> doubleWithRightChild(Node<E> node) {
-		node.left = rotateWithLeftChild(node.left);
+		node.right = rotateWithRightChild(node.right);
 		return rotateWithLeftChild(node);
+	}
+	
+	/**
+	 * 	双旋转LR(先进行左旋转，再进行右旋转)。
+	 * @param node
+	 * @return
+	 */
+	private Node<E> doubleWithLeftChild(Node<E> node) {
+		node.left = rotateWithLeftChild(node.left);
+		return  (node);
 	}
 	
 	/**
@@ -160,6 +204,6 @@ public class AVLTree<E extends Comparable<? super E>> {
 	
 	@Override
 	public String toString() {
-		return "the root value = "+root.val+"."+root.toString();
+		return root.toString();
 	}
 }

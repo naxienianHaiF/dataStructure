@@ -4,35 +4,21 @@ public class AVLTreeTest {
 
 	public static void main(String[] args) {
 		AVLTree<Integer> tree = new AVLTree<>();
-		tree.add(6);
-		tree.levelPrint();
+		int[] arr = {9,12,10};
+		test1(tree,arr);
+	}
+	
+	private static void test1(AVLTree<Integer> tree,int[] arr) {
+		for (Integer i: arr) {
+			tree.add(i);
+			tree.levelPrint();
+			print(tree);
+		}
+	}
+	
+	private static void print(AVLTree<Integer> tree) {
 		System.out.println(tree.toString());
 		System.out.println("size = "+tree.size());
 		System.out.println(">>>>>>");
-		tree.add(5);
-		tree.levelPrint();
-		System.out.println(tree.toString());
-		System.out.println("size = "+tree.size());
-		System.out.println(">>>>>>");
-		tree.add(4);
-		tree.levelPrint();
-		System.out.println(tree.toString());
-		System.out.println("size = "+tree.size());
-		System.out.println(">>>>>>");
-		tree.add(3);
-		tree.levelPrint();
-		System.out.println(tree.toString());
-		System.out.println("size = "+tree.size());
-		System.out.println(">>>>>>");
-		tree.add(2);
-		tree.levelPrint();
-		System.out.println(tree.toString());
-		System.out.println("size = "+tree.size());
-		System.out.println(">>>>>>");
-		tree.add(1);
-		tree.levelPrint();
-		System.out.println(tree.toString());
-		System.out.println("size = "+tree.size());
-		
 	}
 }
