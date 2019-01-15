@@ -64,7 +64,7 @@ public class AVLTree<E extends Comparable<? super E>> {
 	
 	public void add(E val) {
 		root = add(root,val);
-	}
+	}  
 
 	private Node<E> add(Node<E> root, E val) {
 		if (root == null) {
@@ -116,6 +116,19 @@ public class AVLTree<E extends Comparable<? super E>> {
 		return findMax(root.right);
 	}
 	
+	public E findMin() {
+		return findMin(root);
+	}
+	
+	private E findMin(Node<E> root) {
+		if (root == null) {
+			return null;
+		} else if (root.left == null) {
+			return root.val;
+		}
+		return findMin(root.left);
+	}
+
 	/**
 	 * 	对节点y进行右旋转 <br />
 	 * 			y                       x     
@@ -154,7 +167,7 @@ public class AVLTree<E extends Comparable<? super E>> {
 		Node<E> temp = node.right;
 		node.right = temp.left;
 		temp.left = node;
-		
+		  
 		node.height = Math.max(height(node.left), height(node.right))+1;
 		temp.height = Math.max(height(temp.left), node.height)+1;
 		
@@ -182,17 +195,79 @@ public class AVLTree<E extends Comparable<? super E>> {
 	}
 	
 	/**
+	 * remove element
+	 * @param val remove element which value is val
+	 */
+	public void remove(E val) {
+		root = remove(root, val);
+	}
+	
+	private Node<E> remove(Node<E> root, E val) {
+		if (root == null) {
+			return root;
+		}
+		
+		Node<E> temp ;
+		int result = val.compareTo(root.val);
+		if (result > 0) {
+			root.right = remove(root.right, val);
+			temp = root;
+		} else if (result < 0) {
+			root.left = remove(root.left, val);
+			temp = root;
+		} else if (root.left != null && root.right != null) {
+			root.val = findMin(root.right);
+			root.right = remove(root.right, root.val);
+			temp = root;
+		} else {
+			root = (root.left != null) ?
+					root.left : root.right;
+			temp = root;
+			size--;
+		}
+		if (temp== null) {
+			return null;
+		}
+		
+		//维护节点的平衡性
+		temp.height = Math.max(height(temp.left), height(temp.right))+1;
+		int balanceFactor = getBalanceFactor(temp);
+		
+		if (balanceFactor > 1 && getBalanceFactor(temp.left) >=0) {
+			return rotateWithRightChild(temp);
+		}
+		
+		if (balanceFactor < -1 && getBalanceFactor(temp.right) <=0) {
+			return rotateWithLeftChild(temp);
+		}
+		
+		if (balanceFactor > 1 && getBalanceFactor(temp.left) <0) {
+			return doubleWithLeftChild(temp);
+		}
+		
+		if (balanceFactor < -1 && getBalanceFactor(temp.right) >0) {
+			return doubleWithRightChild(temp);
+		}
+		
+		return temp;
+	}
+
+	private int getBalanceFactor(Node<E> root) {
+		return root == null ? 0 : height(root.left) - height(root.right);
+	}
+
+	/**
 	 * level print层序遍历
 	 */
 	public void levelPrint() {
 		if (root == null) {
 			return ;
 		}
-		LinkedList<Node<E>> list = new LinkedList<>();
+		LinkedList<Node<E>> list = new LinkedList<>(); 
 		list.add(root);
 		while (!list.isEmpty()) {
-			Node<E> temp = list.poll();
-			System.out.println(temp.val);
+			Node<E> temp = list.poll(); 
+			System.out.println(temp.val);  
 			if (temp.left != null) {
 				list.add(temp.left);
 			}
