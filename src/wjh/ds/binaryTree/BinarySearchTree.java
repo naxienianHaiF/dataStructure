@@ -152,7 +152,7 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 		System.out.println(root.value);
 	}
 	/**
-	 * ²ãĞò±éÀú
+	 * level print 
 	 */
 	public void levelPrint() {
 		levelPrint(root);
@@ -276,10 +276,37 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	
 	/**
 	 * binary search tree rank<br />
-	 * ²éÑ¯ val ÔÚ¶ş²æÊ÷ÖĞµÄÅÅ Ãû
-	 * @return
+	 *  æŸ¥æ‰¾äºŒå‰æ ‘ä¸­ç¬¬kå¤§ï¼ˆä¸­æ–‡è¯»èµ·æ¥æœ‰ç‚¹æ‹—å£ï¼‰çš„æ•°æ® ï¼Œä¹Ÿå¯ä»¥ç”¨ä¸­åºéå†
 	 */
-	public int rank(E val) {
-		return 0;
+	public E rank(int k) {
+		return rank(root,k);
+	}
+	
+	private E rank(Node root, int k) {
+		if (k < 1 || root == null) {
+			return null;
+		}
+		
+		int leftCount = getCount(root.left);
+		if (leftCount < k) {
+			if (leftCount+1 == k) {
+				return root.value;
+			} else {
+				if (getCount(root.right) < k-(leftCount+1)) {
+					return null;
+				}
+				return rank(root.right, k-(leftCount+1));
+			}
+		} else {
+			return rank(root.left, k);
+		}
+	}
+	
+	private int getCount(Node node) {
+		if (node == null) {
+			return 0;
+		}
+		
+		return getCount(node.left)+getCount(node.right)+1;
 	}
 }
