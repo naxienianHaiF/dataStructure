@@ -1,5 +1,11 @@
 package wjh.sort;
 
+/**
+ *  quick sort
+ * @author JHW
+ *
+ * @param <E>
+ */
 public class QuickSort<E extends Comparable<? super E>> {
 
 	public  void sort(Object[] arr) {
