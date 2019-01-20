@@ -191,7 +191,7 @@ public class AVLTree<E extends Comparable<? super E>> {
 	 */
 	private Node<E> doubleWithLeftChild(Node<E> node) {
 		node.left = rotateWithLeftChild(node.left);
-		return  (node);
+		return  rotateWithRightChild(node);
 	}
 	
 	/**
