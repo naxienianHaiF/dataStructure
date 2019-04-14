@@ -3,19 +3,16 @@ package wjh.ds.unionfind;
 /**
  * 
  * @author JHW
- * @version 3.0.0
+ * @version 5.0.0
  */
-public class UnionFind3 implements UnionFind {
+public class UnionFind5 implements UnionFind {
 
 	private int[] parent;
-	private int[] sz;  //sz[i]表示以i为根的集合中元素个数
 	
-	public UnionFind3(int size) {
+	public UnionFind5(int size) {
 		parent = new int[size];
-		sz = new int[size];
 		for (int i = 0; i < size; i++) {
 			parent[i] = i;
-			sz[i] = 1;
 		}
 	}
 	
@@ -32,12 +29,9 @@ public class UnionFind3 implements UnionFind {
 			return ;
 		}
 		
-		if (sz[pRoot] < sz[qRoot]) {
-			parent[pRoot] = qRoot;
-			sz[qRoot] += sz[pRoot]; 
-		} else {
-			parent[qRoot] = qRoot;
-			sz[pRoot] += sz[qRoot]; 
+		while(p != parent[p]) {
+			parent[p] = parent[parent[p]];
+			p = parent[p];
 		}
 	}
 
