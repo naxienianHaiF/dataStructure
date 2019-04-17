@@ -36,7 +36,7 @@ public class UnionFind3 implements UnionFind {
 			parent[pRoot] = qRoot;
 			sz[qRoot] += sz[pRoot]; 
 		} else {
-			parent[qRoot] = qRoot;
+			parent[qRoot] = pRoot;
 			sz[pRoot] += sz[qRoot]; 
 		}
 	}
